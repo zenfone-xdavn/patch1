@@ -1,0 +1,33 @@
+diff --git a/services/surfaceflinger/Android.mk b/services/surfaceflinger/Android.mk
+index c1ddba1..bdc10c3 100644
+--- a/services/surfaceflinger/Android.mk
++++ b/services/surfaceflinger/Android.mk
+@@ -154,6 +154,7 @@ LOCAL_SRC_FILES := \
+     main_surfaceflinger.cpp
+ 
+ LOCAL_SHARED_LIBRARIES := \
++    libmultidisplay \
+     libsurfaceflinger \
+     libcutils \
+     liblog \
+diff --git a/services/surfaceflinger/main_surfaceflinger.cpp b/services/surfaceflinger/main_surfaceflinger.cpp
+index e8464a3..4213969 100644
+--- a/services/surfaceflinger/main_surfaceflinger.cpp
++++ b/services/surfaceflinger/main_surfaceflinger.cpp
+@@ -14,6 +14,8 @@
+  * limitations under the License.
+  */
+ 
++#include <display/MultiDisplayService.h>
++
+ #include <sys/resource.h>
+ 
+ #include <cutils/sched_policy.h>
+@@ -56,6 +58,8 @@ int main(int, char**) {
+     sp<IServiceManager> sm(defaultServiceManager());
+     sm->addService(String16(SurfaceFlinger::getServiceName()), flinger, false);
+ 
++    intel::MultiDisplayService::instantiate();
++
+     // run in this thread
+     flinger->run();
